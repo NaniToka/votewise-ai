@@ -3,30 +3,36 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Install dependencies with clean install (reproducible builds)
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
-# Copy application source code
+# Copy source and build
 COPY . .
 
-# Build the application
-# Note: VITE_ variables needed at build time should be passed as build args or env vars
+# VITE_ variables are baked into the static bundle at build time.
+# Pass the key via --build-arg during `gcloud run deploy --source .`.
 ARG VITE_GEMINI_API_KEY
 ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+
 RUN npm run build
 
-# Stage 2: Serve the application with Nginx
-FROM nginx:alpine
+# -------------------------------------------------------------------
+# Stage 2: Serve with Nginx (lightweight production image)
+# -------------------------------------------------------------------
+FROM nginx:1.27-alpine
 
-# Copy custom nginx configuration
+# Remove default Nginx placeholder page
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built assets from builder stage
+# Copy compiled static assets from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port (Cloud Run defaults to 8080)
+# Cloud Run routes traffic to port 8080 by default
 EXPOSE 8080
 
-# Run nginx in foreground
+# Run Nginx in the foreground (required for containerized environments)
 CMD ["nginx", "-g", "daemon off;"]
