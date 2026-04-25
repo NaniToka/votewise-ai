@@ -1,0 +1,176 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+[data-theme='high-contrast'] .header {
+  background: var(--background);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+  color: var(--primary);
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-xl);
+}
+
+.nav a {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.2s;
+  padding: var(--space-sm) 0;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+}
+
+.nav a:hover, .nav a.active {
+  color: var(--primary);
+}
+
+.header-actions {
+  position: relative;
+}
+
+.settings-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 220px;
+  padding: var(--space-md);
+  z-index: 10;
+  text-align: left;
+}
+
+.settings-dropdown h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: var(--space-sm);
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-weight: 500;
+  margin-bottom: 4px;
+  outline: none;
+}
+
+.settings-item:hover {
+  background: var(--accent-soft);
+}
+
+.settings-item.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.settings-item:focus-visible {
+  border-color: var(--accent);
+}
+
+.main-content {
+  flex: 1;
+}
+
+.footer {
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: var(--space-xl) 0;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-xl);
+}
+
+.footer-info {
+  max-width: 400px;
+  text-align: left;
+}
+
+.footer-info .logo {
+  margin-bottom: var(--space-md);
+}
+
+.footer-info p {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.footer-links p {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.grayscale { filter: grayscale(1); opacity: 0.7; }
+
+/* Mobile Menu & Touch Target Enhancements */
+@media (max-width: 768px) {
+  .nav {
+    display: none; /* In a real project, we'd add a burger menu. For now, we prioritize essential accessibility. */
+  }
+  
+  .header-content {
+    justify-content: space-between;
+  }
+
+  .settings-dropdown {
+    right: -16px;
+    width: calc(100vw - 32px);
+  }
+
+  /* min 44px touch targets for buttons */
+  .btn, .settings-item, .nav a {
+    min-height: 44px;
+  }
+}
